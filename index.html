@@ -460,6 +460,155 @@
     text-align:center;
   }
 
+  /* ---------- Evaluation Letter ---------- */
+  .letter-toolbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+    margin-bottom:14px;
+    flex-wrap:wrap;
+  }
+  .letter-toolbar h3{
+    margin:0;
+    font-size:19px;
+    color:var(--green-deep);
+  }
+  .letter-suggest{
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:12.5px;
+    color:var(--gold);
+    font-weight:700;
+    background:var(--warn-bg);
+    padding:6px 12px;
+    border-radius:14px;
+  }
+  .letter-card{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:22px 24px;
+    margin-bottom:16px;
+  }
+  .letter-meta-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr;
+    gap:10px;
+    margin-bottom:16px;
+  }
+  .letter-intro,.letter-dua{
+    margin:0 0 12px;
+  }
+  .letter-instruction{
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:12.5px;
+    color:var(--muted);
+    font-style:italic;
+    margin:0 0 16px;
+  }
+  .letter-option{
+    border:1px solid var(--line);
+    border-radius:8px;
+    margin-bottom:12px;
+    overflow:hidden;
+  }
+  .letter-option.selected{
+    border-color:var(--green-mid);
+    box-shadow:0 0 0 2px var(--green-pale);
+  }
+  .letter-option-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+    padding:12px 14px;
+    background:var(--green-pale);
+    cursor:pointer;
+    flex-wrap:wrap;
+  }
+  .letter-option-header .opt-label{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-size:15px;
+  }
+  .badge-suggested{
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:10.5px;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:.04em;
+    color:var(--gold);
+    background:var(--warn-bg);
+    padding:3px 9px;
+    border-radius:10px;
+    display:none;
+  }
+  .badge-suggested.show{display:inline-block;}
+  .letter-option-body{
+    display:none;
+    padding:14px 16px 16px;
+  }
+  .letter-option.selected .letter-option-body{display:block;}
+  .letter-field{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin:10px 0;
+    flex-wrap:wrap;
+  }
+  .letter-field label{
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:12px;
+    font-weight:700;
+    color:var(--ink);
+    white-space:nowrap;
+  }
+  .letter-field input[type="text"],.letter-field input[type="date"]{
+    font-family:inherit;
+    font-size:14px;
+    padding:5px 8px;
+    border:1px solid var(--line);
+    border-radius:6px;
+    flex:1;
+    min-width:160px;
+  }
+  .letter-checklist label{
+    display:flex;
+    align-items:flex-start;
+    gap:8px;
+    margin:6px 0;
+    font-size:14px;
+  }
+  .letter-checklist input{margin-top:4px;}
+  .letter-bullets{
+    margin:8px 0 12px;
+    padding-left:20px;
+  }
+  .letter-bullets li{
+    margin:4px 0;
+  }
+  .letter-note{
+    font-size:13.5px;
+    color:var(--muted);
+    margin:10px 0;
+  }
+  .letter-signoff-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+    margin-top:26px;
+  }
+  .letter-signoff-grid .sig-line{
+    border-bottom:1px solid var(--ink);
+    height:30px;
+  }
+  .letter-signoff-grid b{
+    font-size:13px;
+    display:block;
+    margin-top:6px;
+  }
+
   footer.print-note{
     text-align:center;
     color:var(--muted);
@@ -737,6 +886,13 @@
     #class-table th:last-child, #class-table td:last-child{display:none !important;}
     #yearend-table input.term-input{border:none;background:none;font-weight:600;-webkit-appearance:none;}
     body{background:#fff;}
+    .letter-toolbar,.letter-instruction,.letter-option:not(.selected){display:none !important;}
+    .letter-option-header input[type="radio"]{display:none !important;}
+    .letter-option.selected{border:none;box-shadow:none;}
+    .letter-option.selected .letter-option-header{background:none;padding:0 0 10px;}
+    .badge-suggested{display:none !important;}
+    .letter-field input,.letter-checklist input[type="checkbox"]{border:none !important;}
+    .letter-card{border:none;padding:0;}
   }
 
   @media(max-width:640px){
@@ -988,7 +1144,99 @@
     <div class="action-row">
       <button class="btn ghost" onclick="showView('eval')">← Back to Evaluation</button>
       <button class="btn gold" onclick="saveAndDownload()">💾 Save / Download Report</button>
+      <button class="btn" onclick="openLetterView()">📄 Generate Evaluation Letter</button>
       <button class="btn ghost" onclick="showView('class')">Back to Class List</button>
+    </div>
+  </section>
+
+  <!-- EVALUATION OUTCOME LETTER VIEW -->
+  <section id="view-letter" class="view">
+    <div class="letter-toolbar">
+      <h3>Evaluation Outcome Letter</h3>
+      <span class="letter-suggest" id="letter-suggest"></span>
+    </div>
+
+    <div class="letter-card">
+      <div class="letter-meta-grid">
+        <div class="field"><label for="letterName">Learner Name</label><input id="letterName" type="text" disabled></div>
+        <div class="field"><label for="letterDate">Date</label><input id="letterDate" type="date"></div>
+        <div class="field"><label for="letterGrade">Age / Grade</label><input id="letterGrade" type="text" disabled></div>
+      </div>
+
+      <p class="letter-intro">Assalamu Alaikum Warahmatullahi Wabarakatuh, Dear Parent/Guardian,</p>
+      <p class="letter-instruction">The suggested outcome above is a starting point only — click the option below that you want this letter to use.</p>
+
+      <!-- OPTION 1 -->
+      <div class="letter-option" data-option="1" id="letter-option-1">
+        <div class="letter-option-header" onclick="selectLetterOption(1)">
+          <span class="opt-label"><input type="radio" name="letterOption" value="1" onclick="event.stopPropagation();selectLetterOption(1)"> <b>Option 1: Advance to Phase Two (Trial Period)</b></span>
+          <span class="badge-suggested" id="badge-1">Suggested</span>
+        </div>
+        <div class="letter-option-body">
+          <p><b><span id="letterNameSpan1">The learner</span> has passed the First Phase</b> and may now proceed to the Trial Period.</p>
+          <p>To be accepted into Phase Two, please prepare the following for assessment:</p>
+          <div class="letter-field"><label for="letterTask">Assigned Task</label><input type="text" id="letterTask" placeholder="e.g. Surah An-Naba"></div>
+          <div class="letter-field"><label for="letterAssessDate">Assessment Date</label><input type="date" id="letterAssessDate"></div>
+          <p class="letter-note">Grading criteria:</p>
+          <ul class="letter-bullets">
+            <li><b>Completion</b> — the full portion must be memorized</li>
+            <li><b>Fluency</b> — smooth, steady recitation</li>
+            <li><b>Accuracy</b> — maximum 4 mistakes allowed</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- OPTION 2 -->
+      <div class="letter-option" data-option="2" id="letter-option-2">
+        <div class="letter-option-header" onclick="selectLetterOption(2)">
+          <span class="opt-label"><input type="radio" name="letterOption" value="2" onclick="event.stopPropagation();selectLetterOption(2)"> <b>Option 2: Accepted into Hifz Program</b></span>
+          <span class="badge-suggested" id="badge-2">Suggested</span>
+        </div>
+        <div class="letter-option-body">
+          <p><b><span id="letterNameSpan2">The learner</span> has been accepted into the Hifz Program.</b></p>
+          <p class="letter-note">Yearly targets:</p>
+          <div class="letter-field"><label for="letterYearly">Yearly Target</label><input type="text" id="letterYearly" placeholder="e.g. Completion of 3 Paras"></div>
+          <div class="letter-field"><label for="letterDaily">Daily Sabaq</label><input type="text" id="letterDaily" placeholder="e.g. 6 Lines per day"></div>
+          <p class="letter-note"><b>Note:</b> targets must be met consistently, or admission will be reviewed.</p>
+          <p class="letter-note">Class times: <b>Monday–Friday</b> 5:45 AM &nbsp;·&nbsp; <b>Saturday</b> 5:45–9:00 AM</p>
+          <div class="letter-field"><label for="letterHoliday">Holiday Class</label><input type="text" id="letterHoliday"></div>
+          <div class="letter-field"><label for="letterStart">Starting Date</label><input type="date" id="letterStart"></div>
+        </div>
+      </div>
+
+      <!-- OPTION 3 -->
+      <div class="letter-option" data-option="3" id="letter-option-3">
+        <div class="letter-option-header" onclick="selectLetterOption(3)">
+          <span class="opt-label"><input type="radio" name="letterOption" value="3" onclick="event.stopPropagation();selectLetterOption(3)"> <b>Option 3: Not Accepted (Reassessment Required)</b></span>
+          <span class="badge-suggested" id="badge-3">Suggested</span>
+        </div>
+        <div class="letter-option-body">
+          <p>After assessment, we're unable to offer admission to <b><span id="letterNameSpan3">the learner</span></b> at this time.</p>
+          <p class="letter-note">Areas to improve:</p>
+          <div class="letter-checklist">
+            <label><input type="checkbox" id="letterWeakFluency"> <span><b>Fluency in Nazirah</b></span></label>
+            <label><input type="checkbox" id="letterWeakReading"> <span><b>Reading Practice</b></span></label>
+          </div>
+          <p class="letter-note">To reapply, the student should show:</p>
+          <ul class="letter-bullets">
+            <li>Fluent reading</li>
+            <li>At least 1 Para memorized</li>
+          </ul>
+          <p>We recommend a <i>Nazirah</i> or pre-Hifz class in the meantime.</p>
+        </div>
+      </div>
+
+      <p class="letter-dua">We make Dua that Allah Ta'ala grants the student ease and success in this noble endeavor.</p>
+
+      <div class="letter-signoff-grid">
+        <div><div class="sig-line"></div><b>HOD's Signature</b></div>
+        <div><div class="sig-line"></div><b>Principal's Signature</b></div>
+      </div>
+    </div>
+
+    <div class="action-row">
+      <button class="btn ghost" onclick="showView('summary')">← Back to Summary</button>
+      <button class="btn gold" onclick="printLetter()">🖨 Print / Save Letter (PDF)</button>
     </div>
   </section>
 
@@ -1416,6 +1664,7 @@
     document.getElementById("view-summary").classList.toggle("active", view === "summary");
     document.getElementById("view-yearend").classList.toggle("active", view === "yearend");
     document.getElementById("view-dashboard").classList.toggle("active", view === "dashboard");
+    document.getElementById("view-letter").classList.toggle("active", view === "letter");
 
     document.getElementById("tab-class").classList.toggle("active", view === "class");
     document.getElementById("tab-eval").classList.toggle("active", view === "eval");
@@ -1705,6 +1954,72 @@
     renderDashboard();
     showView("dashboard");
     alert("Year archived and downloaded. The class list is now empty and ready for new learners.");
+  }
+
+  /* ---------- Evaluation Outcome Letter ---------- */
+  function suggestedLetterOption(learner){
+    const pct = scorePctFor(learner);
+    if(pct < 40) return 3;
+    if(pct < 70) return 1;
+    return 2;
+  }
+
+  function computeWeakAreas(learner){
+    const s = learner.scores || {};
+    const fluencyLow = (s.fluency !== null && s.fluency !== undefined && s.fluency <= 1);
+    const readingLow = ((s.accuracy !== null && s.accuracy !== undefined && s.accuracy <= 1) ||
+                         (s.tajweed !== null && s.tajweed !== undefined && s.tajweed <= 1));
+    return {fluency: fluencyLow, reading: readingLow};
+  }
+
+  function openLetterView(){
+    const learner = learners.find(l => l.id === currentLearnerId);
+    if(!learner) return;
+
+    document.getElementById("letterName").value = learner.name || "";
+    document.getElementById("letterGrade").value = learner.ageGrade || "";
+    document.getElementById("letterDate").value = learner.date || "";
+
+    const displayName = learner.name || "The learner";
+    document.getElementById("letterNameSpan1").textContent = displayName;
+    document.getElementById("letterNameSpan2").textContent = displayName;
+    document.getElementById("letterNameSpan3").textContent = displayName;
+
+    const suggested = suggestedLetterOption(learner);
+    const pct = scorePctFor(learner);
+    document.getElementById("letter-suggest").textContent = `Suggested: Option ${suggested} (entry score ${pct}%)`;
+    [1,2,3].forEach(n => {
+      document.getElementById("badge-" + n).classList.toggle("show", n === suggested);
+    });
+
+    // reset selection — evaluator must actively choose
+    document.querySelectorAll('input[name="letterOption"]').forEach(r => r.checked = false);
+    document.querySelectorAll(".letter-option").forEach(el => el.classList.remove("selected"));
+
+    // auto-check weak areas suggestion for option 3, evaluator can adjust
+    const weak = computeWeakAreas(learner);
+    document.getElementById("letterWeakFluency").checked = weak.fluency;
+    document.getElementById("letterWeakReading").checked = weak.reading;
+
+    showView("letter");
+  }
+
+  function selectLetterOption(n){
+    document.querySelectorAll('input[name="letterOption"]').forEach(r => {
+      r.checked = (parseInt(r.value,10) === n);
+    });
+    document.querySelectorAll(".letter-option").forEach(el => {
+      el.classList.toggle("selected", parseInt(el.dataset.option,10) === n);
+    });
+  }
+
+  function printLetter(){
+    const chosen = document.querySelector('input[name="letterOption"]:checked');
+    if(!chosen){
+      alert("Please select which outcome option this letter should use before printing.");
+      return;
+    }
+    window.print();
   }
 
   buildCriteria();
