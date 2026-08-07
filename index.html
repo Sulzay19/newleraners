@@ -593,6 +593,154 @@
     color:var(--muted);
     margin:10px 0;
   }
+
+  /* ---------- Phase 2 Trial Assessment ---------- */
+  .trial-card{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:18px 22px;
+    margin:18px 0;
+  }
+  .trial-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-bottom:12px;
+  }
+  .trial-header h4{
+    margin:0;
+    font-size:16px;
+    color:var(--green-deep);
+  }
+  .trial-hint{
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:12px;
+    color:var(--muted);
+    font-style:italic;
+  }
+  .trial-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    margin-bottom:16px;
+  }
+  .trial-criteria-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:14px;
+    margin-bottom:18px;
+    padding:14px;
+    background:var(--green-pale);
+    border-radius:8px;
+  }
+  .trial-criterion{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:6px;
+    text-align:center;
+  }
+  .trial-criterion-label{
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:12px;
+    font-weight:700;
+    color:var(--ink);
+  }
+  .yn-toggle{
+    display:flex;
+    gap:6px;
+  }
+  .yn-btn{
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:13px;
+    font-weight:700;
+    width:34px;
+    height:34px;
+    border-radius:50%;
+    border:1.5px solid var(--line);
+    background:#fff;
+    cursor:pointer;
+  }
+  .yn-btn.active{
+    background:var(--green-mid);
+    border-color:var(--green-deep);
+    color:#fff;
+  }
+  .trial-mistakes-input{
+    font-family:inherit;
+    font-size:16px;
+    font-weight:700;
+    text-align:center;
+    width:60px;
+    padding:5px;
+    border:1px solid var(--line);
+    border-radius:6px;
+  }
+  .trial-result-row{
+    display:flex;
+    align-items:center;
+    gap:16px;
+    flex-wrap:wrap;
+  }
+  .trial-result-label{
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:12.5px;
+    font-weight:700;
+    letter-spacing:.04em;
+    color:var(--ink);
+  }
+  .trial-result-options{
+    display:flex;
+    gap:22px;
+    flex-wrap:wrap;
+  }
+  .trial-circle-opt{
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:13.5px;
+    font-weight:700;
+    color:var(--ink);
+    cursor:pointer;
+    padding:6px 14px;
+    border-radius:999px;
+    border:2.5px solid transparent;
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    transition:border-color .1s;
+  }
+  .trial-circle-opt .circle-mark{font-size:14px;}
+  .trial-circle-opt.circled{
+    border-color:var(--gold);
+    transform:rotate(-2deg);
+  }
+  .trial-circle-opt.circled#trialOptPass{border-color:#4a9a5c;color:#2c6b3a;}
+  .trial-circle-opt.circled#trialOptFail{border-color:#c0554b;color:#8f382f;}
+  .trial-note{
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:12px;
+    color:var(--gold);
+    font-weight:700;
+  }
+
+  /* ---------- Year-End Decision ---------- */
+  .decision-select{
+    font-family:inherit;
+    font-size:13px;
+    padding:5px 6px;
+    border:1px solid var(--line);
+    border-radius:6px;
+    width:100%;
+  }
+  .decision-hint{
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:10.5px;
+    color:var(--gold);
+    margin-top:4px;
+    font-weight:600;
+  }
   .letter-signoff-grid{
     display:grid;
     grid-template-columns:1fr 1fr;
@@ -885,6 +1033,18 @@
     .row-actions{display:none !important;}
     #class-table th:last-child, #class-table td:last-child{display:none !important;}
     #yearend-table input.term-input{border:none;background:none;font-weight:600;-webkit-appearance:none;}
+    #yearend-table select.decision-select{border:none;background:none;font-weight:600;-webkit-appearance:none;}
+    #yearend-table{font-size:11px;}
+    #yearend-table th, #yearend-table td{padding:6px 5px;}
+    #yearend-table .term-inputs-row{flex-wrap:nowrap !important;gap:3px;justify-content:center;}
+    #yearend-table .term-input{width:26px;padding:2px 1px;font-size:10.5px;}
+    #yearend-table .term-inputs-row label{font-size:8px;margin-bottom:0;}
+    #yearend-table .decision-hint{font-size:9px;}
+    #yearend-table .decision-select{font-size:10.5px;padding:2px;}
+    .trial-hint{display:none !important;}
+    .yn-btn:not(.active){opacity:.25;}
+    .trial-circle-opt:not(.circled){display:none !important;}
+    .trial-circle-opt.circled{border-color:#333 !important;color:#000 !important;}
     body{background:#fff;}
     .letter-toolbar,.letter-instruction,.letter-option:not(.selected){display:none !important;}
     .letter-option-header input[type="radio"]{display:none !important;}
@@ -951,7 +1111,7 @@
 
     <div class="dash-strip" aria-hidden="true"></div>
 
-    
+    <p class="dash-intro">A standalone overview of the class — entry evaluations and year-end juz progress at a glance. Nothing here is shared with any other tracking system.</p>
 
     <div class="dash-panel">
       <svg class="dash-corner tl"><use href="#corner-motif"/></svg>
@@ -1130,6 +1290,55 @@
       </div>
     </div>
 
+    <div class="trial-card" id="trial-card">
+      <div class="trial-header">
+        <h4>Phase 2 Trial Assessment</h4>
+        <span class="trial-hint">Fill this in once the learner returns to be tested on the task from Option 1.</span>
+      </div>
+      <div class="trial-grid">
+        <div class="field"><label for="trialTask">Task Given</label><input id="trialTask" type="text" placeholder="e.g. Surah An-Naba" onchange="onTrialFieldChange()"></div>
+        <div class="field"><label for="trialAssessDate">Date Tested</label><input id="trialAssessDate" type="date" onchange="onTrialFieldChange()"></div>
+      </div>
+
+      <div class="trial-criteria-grid">
+        <div class="trial-criterion">
+          <span class="trial-criterion-label">Memorized</span>
+          <div class="yn-toggle">
+            <button type="button" class="yn-btn" id="trialMemorizedY" onclick="setTrialYN('memorized','Y')">Y</button>
+            <button type="button" class="yn-btn" id="trialMemorizedN" onclick="setTrialYN('memorized','N')">N</button>
+          </div>
+        </div>
+        <div class="trial-criterion">
+          <span class="trial-criterion-label">Completion</span>
+          <div class="yn-toggle">
+            <button type="button" class="yn-btn" id="trialCompletionY" onclick="setTrialYN('completion','Y')">Y</button>
+            <button type="button" class="yn-btn" id="trialCompletionN" onclick="setTrialYN('completion','N')">N</button>
+          </div>
+        </div>
+        <div class="trial-criterion">
+          <span class="trial-criterion-label">Fluency</span>
+          <div class="yn-toggle">
+            <button type="button" class="yn-btn" id="trialFluencyY" onclick="setTrialYN('fluency','Y')">Y</button>
+            <button type="button" class="yn-btn" id="trialFluencyN" onclick="setTrialYN('fluency','N')">N</button>
+          </div>
+        </div>
+        <div class="trial-criterion">
+          <label class="trial-criterion-label" for="trialMistakes">Mistake Count</label>
+          <input id="trialMistakes" type="number" min="0" placeholder="0" class="trial-mistakes-input" onchange="onTrialFieldChange()">
+        </div>
+      </div>
+
+      <div class="trial-result-row">
+        <span class="trial-result-label">RESULT</span>
+        <div class="trial-result-options">
+          <span class="trial-circle-opt" id="trialOptPass" onclick="setTrialResult('pass')"><span class="circle-mark">✓</span> PASS</span>
+          <span class="trial-circle-opt" id="trialOptFail" onclick="setTrialResult('fail')"><span class="circle-mark">✗</span> FAIL</span>
+          <span class="trial-circle-opt" id="trialOptClear" onclick="setTrialResult(null)">NOT YET TESTED</span>
+        </div>
+        <span class="trial-note" id="trial-suggest-note"></span>
+      </div>
+    </div>
+
     <div class="signoff">
       <div class="field">
         <label for="comments">Comments</label>
@@ -1260,6 +1469,7 @@
           <th>Pages by Term (1 · 2 · 3 · 4)</th>
           <th>Total Pages</th>
           <th>Result</th>
+          <th>Decision</th>
         </tr>
       </thead>
       <tbody id="yearend-table-body"></tbody>
@@ -1271,7 +1481,7 @@
     </div>
   </section>
 
-  
+  <footer class="print-note">All scores and notes update automatically as you assess each candidate. Use "Save / Download Report" to keep a copy.</footer>
 </div>
 
 <script>
@@ -1396,7 +1606,9 @@
       scores: blankScores(),
       comments: "",
       sig: "",
-      juzProgress: {t1: null, t2: null, t3: null, t4: null}
+      juzProgress: {t1: null, t2: null, t3: null, t4: null},
+      phase2: {task: "", assessDate: "", memorized: null, completion: null, fluency: null, mistakes: null, result: null},
+      yearEndDecision: ""
     };
     learners.push(learner);
 
@@ -1456,6 +1668,10 @@
       } else {
         const r = resultFor(total);
         statusHtml = `<span class="status-chip ${r.cls}">${r.label}</span>`;
+      }
+      const trial = trialStatusFor(l);
+      if(trial){
+        statusHtml += ` <span class="status-chip ${trial.cls}">${trial.label}</span>`;
       }
       return `
         <tr>
@@ -1683,6 +1899,7 @@
     }
     if(view === "summary"){
       document.getElementById("evalDateSummary").value = document.getElementById("assessDate").value || "—";
+      renderTrialCard();
     }
     if(view === "yearend"){
       renderYearEnd();
@@ -1729,6 +1946,12 @@
   /* ---------- Year-End Juz Progress ---------- */
   const JUZ_PAGES_REQUIRED = 63;   // 2.25 juz to progress
   const JUZ_PAGES_TOTAL = 84;      // 3 juz total for the year
+
+  function migrateDecision(value){
+    const legacyMap = {promote: "achieved_continue", repeat: "notachieved_3rdtrial", exit: "notachieved_discontinue"};
+    if(!value) return "";
+    return legacyMap[value] || value;
+  }
 
   function scorePctFor(learner){
     return Math.round((totalFor(learner) / 18) * 100);
@@ -1790,6 +2013,27 @@
 
       const termField = (key) => `<div><label>T${key.slice(1)}</label><input type="number" min="0" max="28" class="term-input" value="${jp[key] === null || jp[key] === undefined ? "" : jp[key]}" onchange="onJuzChange('${l.id}','${key}',this.value)"></div>`;
 
+      const decision = l.yearEndDecision || "";
+      let suggested = "";
+      if(anyEntered){
+        suggested = total >= JUZ_PAGES_REQUIRED ? "achieved_continue" : "notachieved_3rdtrial";
+      }
+      const decisionLabels = {
+        achieved_continue: "Target achieved / continue",
+        notachieved_3rdtrial: "Target not achieved / 3rd trial",
+        notachieved_discontinue: "Target not achieved / discontinue"
+      };
+      const suggestHint = (suggested && !decision) ? `<div class="decision-hint">Suggested: ${decisionLabels[suggested]}</div>` : "";
+      const decisionHtml = `
+        <select class="decision-select" onchange="onDecisionChange('${l.id}', this.value)">
+          <option value="" ${!decision ? "selected" : ""}>— Select —</option>
+          <option value="achieved_continue" ${decision === "achieved_continue" ? "selected" : ""}>Target achieved / continue</option>
+          <option value="notachieved_3rdtrial" ${decision === "notachieved_3rdtrial" ? "selected" : ""}>Target not achieved / 3rd trial</option>
+          <option value="notachieved_discontinue" ${decision === "notachieved_discontinue" ? "selected" : ""}>Target not achieved / discontinue</option>
+        </select>
+        ${suggestHint}
+      `;
+
       return `
         <tr>
           <td>${escapeHtml(l.name)}</td>
@@ -1801,9 +2045,17 @@
           </td>
           <td class="juz-total-cell">${total} / ${JUZ_PAGES_TOTAL}${diffHtml}</td>
           <td><span class="status-chip ${r.cls}">${r.label}</span></td>
+          <td>${decisionHtml}</td>
         </tr>
       `;
     }).join("");
+  }
+
+  function onDecisionChange(id, value){
+    const learner = learners.find(l => l.id === id);
+    if(!learner) return;
+    learner.yearEndDecision = value;
+    renderYearEnd();
   }
 
   function onJuzChange(id, key, value){
@@ -1915,7 +2167,9 @@
         scores: l.scores || blankScores(),
         comments: l.comments || "",
         sig: l.sig || "",
-        juzProgress: l.juzProgress || {t1:null,t2:null,t3:null,t4:null}
+        juzProgress: l.juzProgress || {t1:null,t2:null,t3:null,t4:null},
+        phase2: l.phase2 || {task: "", assessDate: "", memorized: null, completion: null, fluency: null, mistakes: null, result: null},
+        yearEndDecision: migrateDecision(l.yearEndDecision)
       }));
       currentLearnerId = null;
       event.target.value = "";
@@ -1956,8 +2210,82 @@
     alert("Year archived and downloaded. The class list is now empty and ready for new learners.");
   }
 
-  /* ---------- Evaluation Outcome Letter ---------- */
+  /* ---------- Phase 2 Trial Assessment ---------- */
+  const BLANK_PHASE2 = {task:"", assessDate:"", memorized:null, completion:null, fluency:null, mistakes:null, result:null};
+
+  function renderTrialCard(){
+    const learner = learners.find(l => l.id === currentLearnerId);
+    if(!learner) return;
+    const t = learner.phase2 || BLANK_PHASE2;
+    document.getElementById("trialTask").value = t.task || "";
+    document.getElementById("trialAssessDate").value = t.assessDate || "";
+    document.getElementById("trialMistakes").value = (t.mistakes === null || t.mistakes === undefined) ? "" : t.mistakes;
+    updateYNButtons("Memorized", t.memorized);
+    updateYNButtons("Completion", t.completion);
+    updateYNButtons("Fluency", t.fluency);
+    updateTrialResultButtons(t.result);
+    updateTrialSuggestNote(t);
+  }
+
+  function onTrialFieldChange(){
+    const learner = learners.find(l => l.id === currentLearnerId);
+    if(!learner) return;
+    if(!learner.phase2) learner.phase2 = Object.assign({}, BLANK_PHASE2);
+    learner.phase2.task = document.getElementById("trialTask").value;
+    learner.phase2.assessDate = document.getElementById("trialAssessDate").value;
+    const mVal = document.getElementById("trialMistakes").value;
+    learner.phase2.mistakes = mVal === "" ? null : Math.max(0, parseInt(mVal, 10) || 0);
+    updateTrialSuggestNote(learner.phase2);
+  }
+
+  function setTrialYN(field, value){
+    const learner = learners.find(l => l.id === currentLearnerId);
+    if(!learner) return;
+    if(!learner.phase2) learner.phase2 = Object.assign({}, BLANK_PHASE2);
+    learner.phase2[field] = (learner.phase2[field] === value) ? null : value;
+    const cap = field.charAt(0).toUpperCase() + field.slice(1);
+    updateYNButtons(cap, learner.phase2[field]);
+  }
+
+  function updateYNButtons(cap, value){
+    document.getElementById("trial" + cap + "Y").classList.toggle("active", value === "Y");
+    document.getElementById("trial" + cap + "N").classList.toggle("active", value === "N");
+  }
+
+  function setTrialResult(result){
+    const learner = learners.find(l => l.id === currentLearnerId);
+    if(!learner) return;
+    if(!learner.phase2) learner.phase2 = Object.assign({}, BLANK_PHASE2);
+    learner.phase2.result = result;
+    updateTrialResultButtons(result);
+    renderClassList();
+  }
+
+  function updateTrialResultButtons(result){
+    document.getElementById("trialOptPass").classList.toggle("circled", result === "pass");
+    document.getElementById("trialOptFail").classList.toggle("circled", result === "fail");
+    document.getElementById("trialOptClear").classList.toggle("circled", !result);
+  }
+
+  function updateTrialSuggestNote(t){
+    const note = document.getElementById("trial-suggest-note");
+    if(t.result){ note.textContent = ""; return; }
+    if(t.mistakes === null || t.mistakes === undefined){ note.textContent = ""; return; }
+    note.textContent = t.mistakes <= 4 ? "Within the 4-mistake limit" : "Over the 4-mistake limit";
+  }
+
+  function trialStatusFor(learner){
+    const t = learner.phase2;
+    if(!t || (!t.result && !t.task && !t.assessDate && !t.memorized && !t.completion && !t.fluency)) return null;
+    if(t.result === "pass") return {label:"Trial Passed", cls:"status-ontrack"};
+    if(t.result === "fail") return {label:"Trial Failed", cls:"status-below"};
+    return {label:"On Trial", cls:"status-notstarted"};
+  }
+
+
   function suggestedLetterOption(learner){
+    if(learner.phase2 && learner.phase2.result === "pass") return 2;
+    if(learner.phase2 && learner.phase2.result === "fail") return 3;
     const pct = scorePctFor(learner);
     if(pct < 40) return 3;
     if(pct < 70) return 1;
@@ -1987,7 +2315,11 @@
 
     const suggested = suggestedLetterOption(learner);
     const pct = scorePctFor(learner);
-    document.getElementById("letter-suggest").textContent = `Suggested: Option ${suggested} (entry score ${pct}%)`;
+    let suggestReason;
+    if(learner.phase2 && learner.phase2.result === "pass") suggestReason = "trial passed";
+    else if(learner.phase2 && learner.phase2.result === "fail") suggestReason = "trial failed";
+    else suggestReason = `entry score ${pct}%`;
+    document.getElementById("letter-suggest").textContent = `Suggested: Option ${suggested} (${suggestReason})`;
     [1,2,3].forEach(n => {
       document.getElementById("badge-" + n).classList.toggle("show", n === suggested);
     });
