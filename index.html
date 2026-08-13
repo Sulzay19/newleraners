@@ -5,36 +5,135 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Central Islamic School — Hifz Evaluation Form</title>
 <style>
+  @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
   :root{
-    --ink:#1f2b21;
-    --paper:#faf7f0;
+    --ink:#181b22;
+    --paper:#f3f4f8;
     --panel:#ffffff;
-    --green-deep:#1e4d2b;
-    --green-mid:#4a7a4f;
-    --green-pale:#e7efe4;
-    --gold:#b78c3f;
-    --line:#dcd6c6;
-    --muted:#6c6f62;
-    --danger:#2f5fa5;
-    --danger-bg:#e5eefb;
-    --warn:#9a7318;
-    --warn-bg:#faf1dc;
-    --ok:#1e4d2b;
-    --ok-bg:#e7efe4;
-    --radius:10px;
+    --green-deep:#181b22;
+    --green-mid:#33384a;
+    --green-pale:#eef0f6;
+    --gold:#d8ab09;
+    --line:#e6e7ee;
+    --muted:#767a87;
+    --danger:#e3442f;
+    --danger-bg:#fdeceb;
+    --warn:#a67a00;
+    --warn-bg:#fff6d6;
+    --ok:#1f9d55;
+    --ok-bg:#e8f7ee;
+    --radius:14px;
+    --yellow:#ffc801;
+    --yellow-deep:#d8ab09;
+    --red:#e3442f;
+    --red-deep:#bd3c2b;
+    --sidebar-bg:#181b22;
+    --sidebar-text:#a9acb8;
+    --shadow:0 1px 2px rgba(18,20,28,.04), 0 10px 28px -14px rgba(18,20,28,.18);
   }
   *{box-sizing:border-box;}
   body{
     margin:0;
     background:var(--paper);
     color:var(--ink);
-    font-family:"Iowan Old Style","Palatino Linotype",Georgia,serif;
+    font-family:"Manrope","Helvetica Neue",Arial,sans-serif;
     line-height:1.45;
   }
+  .app-shell{
+    display:flex;
+    align-items:stretch;
+    min-height:100vh;
+  }
+  .sidebar{
+    width:250px;
+    flex-shrink:0;
+    background:var(--sidebar-bg);
+    color:var(--sidebar-text);
+    padding:26px 18px;
+    display:flex;
+    flex-direction:column;
+    gap:22px;
+  }
+  .sidebar-brand{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:2px 8px 18px;
+    border-bottom:1px solid rgba(255,255,255,.1);
+  }
+  .sidebar-brand img{
+    height:34px;
+    width:34px;
+    border-radius:8px;
+    background:#fff;
+    padding:2px;
+    flex-shrink:0;
+  }
+  .sidebar-brand-text{
+    line-height:1.25;
+  }
+  .sidebar-brand-text .name{
+    font-size:13.5px;
+    font-weight:800;
+    color:#fff;
+    letter-spacing:.01em;
+  }
+  .sidebar-brand-text .sub{
+    font-size:11px;
+    color:var(--sidebar-text);
+  }
+  .sidebar-nav{
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+  }
+  .sidebar-nav .tab-btn{
+    display:flex;
+    align-items:center;
+    text-align:left;
+    width:100%;
+    font-family:"Manrope","Helvetica Neue",Arial,sans-serif;
+    font-size:14px;
+    font-weight:600;
+    padding:11px 14px;
+    border-radius:10px;
+    border:none;
+    border-bottom:none;
+    background:none;
+    color:var(--sidebar-text);
+    cursor:pointer;
+  }
+  .sidebar-nav .tab-btn:hover:not(:disabled){
+    background:rgba(255,255,255,.06);
+    color:#fff;
+  }
+  .sidebar-nav .tab-btn.active{
+    background:var(--yellow);
+    color:#181b22;
+    font-weight:700;
+  }
+  .sidebar-nav .tab-btn:disabled{
+    opacity:.35;
+    cursor:not-allowed;
+  }
+  .sidebar-nav .tab-btn:focus-visible{
+    outline:2px solid var(--yellow);
+    outline-offset:2px;
+  }
+  .main-content{
+    flex:1;
+    min-width:0;
+    background:var(--paper);
+  }
   .wrap{
-    max-width:920px;
+    max-width:960px;
     margin:0 auto;
-    padding:28px 20px 80px;
+    padding:28px 24px 80px;
+  }
+
+  .info-grid,.crit-card,.summary-card,.breakdown .bd-card,.signoff,
+  .letter-card,.trial-card,.add-learner-card,table.class-table,.dash-panel{
+    box-shadow:var(--shadow);
   }
 
   /* Letterhead */
@@ -1028,7 +1127,8 @@
   }
 
   @media print{
-    .tabs,.action-row,.back-row,.add-learner-card,footer.print-note{display:none !important;}
+    .sidebar,.tabs,.action-row,.back-row,.add-learner-card,footer.print-note{display:none !important;}
+    .main-content{flex:none;}
     .class-toolbar .count{display:none !important;}
     .row-actions{display:none !important;}
     #class-table th:last-child, #class-table td:last-child{display:none !important;}
@@ -1066,6 +1166,24 @@
 </style>
 </head>
 <body>
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <img src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%23ffc801'/%3E%3Cpath d='M7 16.5V7.5L12 5l5 2.5v9L12 19l-5-2.5Z' fill='none' stroke='%23181b22' stroke-width='1.4'/%3E%3C/svg%3E" alt="">
+      <div class="sidebar-brand-text">
+        <div class="name">Central Islamic School</div>
+        <div class="sub">Hifz Program</div>
+      </div>
+    </div>
+    <nav class="sidebar-nav" role="tablist">
+      <button class="tab-btn active" id="tab-dashboard" role="tab" aria-selected="true" onclick="showView('dashboard')">Dashboard</button>
+      <button class="tab-btn" id="tab-class" role="tab" aria-selected="false" onclick="showView('class')">Class List</button>
+      <button class="tab-btn" id="tab-eval" role="tab" aria-selected="false" onclick="showView('eval')" disabled>Evaluation</button>
+      <button class="tab-btn" id="tab-summary" role="tab" aria-selected="false" onclick="showView('summary')" disabled>Summary</button>
+      <button class="tab-btn" id="tab-yearend" role="tab" aria-selected="false" onclick="showView('yearend')">Year-End Progress</button>
+    </nav>
+  </aside>
+  <main class="main-content">
 <div class="wrap">
 
   <div class="letterhead">
@@ -1086,13 +1204,6 @@
     <p>Simple assessment form</p>
   </header>
 
-  <div class="tabs" role="tablist">
-    <button class="tab-btn active" id="tab-dashboard" role="tab" aria-selected="true" onclick="showView('dashboard')">Dashboard</button>
-    <button class="tab-btn" id="tab-class" role="tab" aria-selected="false" onclick="showView('class')">Class List</button>
-    <button class="tab-btn" id="tab-eval" role="tab" aria-selected="false" onclick="showView('eval')" disabled>Evaluation</button>
-    <button class="tab-btn" id="tab-summary" role="tab" aria-selected="false" onclick="showView('summary')" disabled>Summary</button>
-    <button class="tab-btn" id="tab-yearend" role="tab" aria-selected="false" onclick="showView('yearend')">Year-End Progress</button>
-  </div>
 
   <!-- DASHBOARD VIEW -->
   <section id="view-dashboard" class="view active">
@@ -1482,6 +1593,8 @@
   </section>
 
   <footer class="print-note">All scores and notes update automatically as you assess each candidate. Use "Save / Download Report" to keep a copy.</footer>
+</div>
+  </main>
 </div>
 
 <script>
