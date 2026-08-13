@@ -1122,8 +1122,21 @@
     .dash-panel{padding:22px 16px 18px;}
   }
 
+  .yearend-report-card{margin-bottom:22px;}
+  .yearend-report-card .report-narrative{
+    font-size:14.5px;
+    line-height:1.75;
+    color:var(--ink);
+    margin:16px 0;
+  }
+
   @media print{
     #view-dashboard{display:none !important;}
+  }
+
+  @media print{
+    .yearend-report-card{page-break-inside:avoid;page-break-after:always;border:none;padding:0;margin-bottom:0;}
+    .yearend-report-card:last-child{page-break-after:auto;}
   }
 
   @media print{
@@ -1132,6 +1145,7 @@
     .class-toolbar .count{display:none !important;}
     .row-actions{display:none !important;}
     #class-table th:last-child, #class-table td:last-child{display:none !important;}
+    #yearend-table th:last-child, #yearend-table td:last-child{display:none !important;}
     #yearend-table input.term-input{border:none;background:none;font-weight:600;-webkit-appearance:none;}
     #yearend-table select.decision-select{border:none;background:none;font-weight:600;-webkit-appearance:none;}
     #yearend-table{font-size:11px;}
@@ -1570,6 +1584,7 @@
 
     <div class="action-row" style="margin-top:0;margin-bottom:16px;justify-content:flex-start;">
       <button class="btn ghost" onclick="printYearEnd()">🖨 Save / Print Year-End Report (PDF)</button>
+      <button class="btn ghost" onclick="openYearEndReport('all')">📄 View All Outcome Narratives</button>
     </div>
 
     <table class="class-table" id="yearend-table">
@@ -1581,6 +1596,7 @@
           <th>Total Pages</th>
           <th>Result</th>
           <th>Decision</th>
+          <th>Narrative</th>
         </tr>
       </thead>
       <tbody id="yearend-table-body"></tbody>
@@ -1589,6 +1605,20 @@
 
     <div class="action-row">
       <button class="btn ghost" onclick="showView('class')">← Back to Class List</button>
+    </div>
+  </section>
+
+  <!-- YEAR-END OUTCOME NARRATIVE VIEW -->
+  <section id="view-yearend-report" class="view">
+    <div class="letter-toolbar">
+      <h3 id="yearendReportTitle">Year-End Outcome Narrative</h3>
+    </div>
+
+    <div id="yearendReportBody"></div>
+
+    <div class="action-row">
+      <button class="btn ghost" onclick="showView('yearend')">← Back to Year-End Progress</button>
+      <button class="btn gold" onclick="printYearEndReport()">🖨 Print / Save Narrative (PDF)</button>
     </div>
   </section>
 
@@ -1994,6 +2024,7 @@
     document.getElementById("view-yearend").classList.toggle("active", view === "yearend");
     document.getElementById("view-dashboard").classList.toggle("active", view === "dashboard");
     document.getElementById("view-letter").classList.toggle("active", view === "letter");
+    document.getElementById("view-yearend-report").classList.toggle("active", view === "yearend-report");
 
     document.getElementById("tab-class").classList.toggle("active", view === "class");
     document.getElementById("tab-eval").classList.toggle("active", view === "eval");
@@ -2159,6 +2190,7 @@
           <td class="juz-total-cell">${total} / ${JUZ_PAGES_TOTAL}${diffHtml}</td>
           <td><span class="status-chip ${r.cls}">${r.label}</span></td>
           <td>${decisionHtml}</td>
+          <td><button class="btn ghost small" onclick="openYearEndReport('${l.id}')">📄 Report</button></td>
         </tr>
       `;
     }).join("");
@@ -2190,6 +2222,121 @@
       alert("No learners currently qualify for the year-end trial list.");
       return;
     }
+    window.print();
+  }
+
+  /* ---------- Year-End Outcome Narrative ---------- */
+  const DECISION_LABELS = {
+    achieved_continue: "Target achieved / continue",
+    notachieved_3rdtrial: "Target not achieved / 3rd trial",
+    notachieved_discontinue: "Target not achieved / discontinue"
+  };
+
+  function pronounFor(learner){
+    return learner.gender === "Female" ? "She" : "He";
+  }
+
+  function capitalize(str){
+    if(!str) return "";
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
+
+  function generateYearEndNarrative(learner){
+    const displayName = capitalize(learner.name || "This learner");
+    const He = pronounFor(learner);
+    const he = He.toLowerCase();
+    const pct = scorePctFor(learner);
+    const jp = learner.juzProgress || {t1:null,t2:null,t3:null,t4:null};
+    const terms = ["t1","t2","t3","t4"].map(k => jp[k]);
+    const total = juzTotalFor(learner);
+    const anyEntered = juzAnyEntered(learner);
+    const decision = learner.yearEndDecision || "";
+
+    const openLine = `${displayName} entered the program with an entry score of ${pct}% and was placed on a one-year trial to complete 3 juz (84 pages) across the four terms.`;
+
+    if(!anyEntered){
+      return `${openLine} Term-by-term page progress has not yet been recorded, so a year-end outcome cannot be generated yet.`;
+    }
+
+    const enteredTerms = terms.filter(t => t !== null && t !== undefined);
+    const termsDisplay = terms.map(t => (t === null || t === undefined) ? "0" : t).join(", ");
+
+    let trend = "";
+    if(enteredTerms.length >= 2){
+      const first = enteredTerms[0];
+      const last = enteredTerms[enteredTerms.length - 1];
+      if(last > first) trend = `, and ${he} showed improvement as the year went on`;
+      else if(last < first) trend = `, and the pace declined as the year progressed`;
+      else trend = `, keeping a fairly consistent pace throughout`;
+    }
+
+    const termLine = `Across the terms, ${he} memorized ${termsDisplay} pages respectively, totaling ${total} of the required 84 pages${trend}.`;
+
+    let outcomeLine;
+    if(total >= JUZ_PAGES_REQUIRED){
+      const surplus = total - JUZ_PAGES_REQUIRED;
+      outcomeLine = `${He} reached the year-end benchmark of ${JUZ_PAGES_REQUIRED} pages (2.25 juz) needed to progress, finishing ${surplus} page${surplus === 1 ? "" : "s"} above the minimum requirement.`;
+      outcomeLine += decision === "notachieved_3rdtrial" || decision === "notachieved_discontinue"
+        ? ` The recorded decision for ${he} is: ${DECISION_LABELS[decision]}.`
+        : ` ${He} will continue on to the next level.`;
+    } else {
+      const shortfall = JUZ_PAGES_REQUIRED - total;
+      outcomeLine = `${He} fell short of the ${JUZ_PAGES_REQUIRED}-page (2.25 juz) benchmark required to progress, finishing ${shortfall} page${shortfall === 1 ? "" : "s"} short of the minimum.`;
+      if(decision === "notachieved_3rdtrial"){
+        outcomeLine += ` Given this, the decision is for ${he} to repeat the year on a third and final trial.`;
+      } else if(decision === "notachieved_discontinue"){
+        outcomeLine += ` As ${he} has already exhausted the trial period, the decision is to discontinue ${he} from the Hifz program.`;
+      } else if(decision === "achieved_continue"){
+        outcomeLine += ` The recorded decision for ${he} is to continue despite the shortfall.`;
+      } else {
+        outcomeLine += ` A decision on next steps (a further trial or discontinuation) is still pending.`;
+      }
+    }
+
+    return `${openLine} ${termLine} ${outcomeLine}`;
+  }
+
+  function renderYearEndReportCard(learner){
+    const total = juzTotalFor(learner);
+    const anyEntered = juzAnyEntered(learner);
+    const r = juzResultFor(total, anyEntered);
+    const decision = learner.yearEndDecision || "";
+    const decisionText = decision ? DECISION_LABELS[decision] : "Not yet decided";
+    return `
+      <div class="letter-card yearend-report-card">
+        <div class="letter-meta-grid">
+          <div class="field"><label>Learner Name</label><input type="text" value="${escapeHtml(learner.name || "")}" disabled></div>
+          <div class="field"><label>Entry Score</label><input type="text" value="${scorePctFor(learner)}%" disabled></div>
+          <div class="field"><label>Result</label><input type="text" value="${r.label}" disabled></div>
+        </div>
+        <p class="report-narrative">${escapeHtml(generateYearEndNarrative(learner))}</p>
+        <p class="letter-note"><b>Decision on file:</b> ${escapeHtml(decisionText)}</p>
+      </div>
+    `;
+  }
+
+  function openYearEndReport(id){
+    const trialLearners = learners.filter(eligibleForTrial);
+    const container = document.getElementById("yearendReportBody");
+    const title = document.getElementById("yearendReportTitle");
+
+    if(id === "all"){
+      if(trialLearners.length === 0){
+        alert("No learners currently qualify for the year-end trial list.");
+        return;
+      }
+      title.textContent = "Year-End Outcome Narratives — All Learners";
+      container.innerHTML = trialLearners.map(l => renderYearEndReportCard(l)).join("");
+    } else {
+      const learner = learners.find(l => l.id === id);
+      if(!learner) return;
+      title.textContent = `Year-End Outcome Narrative — ${learner.name || ""}`;
+      container.innerHTML = renderYearEndReportCard(learner);
+    }
+    showView("yearend-report");
+  }
+
+  function printYearEndReport(){
     window.print();
   }
 
